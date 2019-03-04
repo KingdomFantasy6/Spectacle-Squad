@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 887, y: 492}
   m_MaxSize: {x: 16012, y: 14042}
   vertical: 0
-  controlID: 139
+  controlID: 141
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -397,19 +397,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Art Assets
+    - Assets/Art Assets/UI Assets
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Art Assets
+  - Assets/Art Assets/UI Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\Olivia Wertheimer\Documents\GitHub\Spectacle-Squad\Entity_1
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e4280000
-    m_LastClickedID: 10468
-    m_ExpandedIDs: 00000000ca280000e4280000f228000038290000942900004c2c000000ca9a3bffffff7f
+    m_SelectedIDs: 4e2a0000
+    m_LastClickedID: 10830
+    m_ExpandedIDs: 0000000022260000582600006e260000002700006e270000422a000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -437,7 +437,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000ca280000e4280000f228000038290000942900004c2c0000
+    m_ExpandedIDs: 0000000022260000582600006e260000002700006e270000422a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -555,7 +555,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 16e9ffff00000000
+    m_ExpandedIDs: 1afcffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.017782342, y: -0.97221655, z: 0.2197662, w: 0.07862749}
     speed: 2
-    m_Value: {x: 0.017782336, y: -0.9722162, z: 0.21976613, w: 0.07862746}
+    m_Value: {x: -0.017782332, y: 0.9722162, z: -0.21976613, w: -0.07862747}
   m_Size:
     m_Target: 8.011653
     speed: 2

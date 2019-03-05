@@ -23,7 +23,8 @@ public class PlayerInteraction : MonoBehaviour {
     [HideInInspector]
     public bool InConversation;
     bool ComputerON;
-    public Text computerPost;
+    public Text interact;
+    bool interactShown;
     public GameObject newnoteadded;
 
     // The notepad and the social network post can be done via UI text
@@ -46,15 +47,36 @@ public class PlayerInteraction : MonoBehaviour {
             "do you mind if I use this story? ";
         dialogue[10] = "Girl: If it helps me and the other girls stop getting tardy notices, sure.";
         dialogue[11] = "";
-
+        interact.gameObject.SetActive(false);
+        interactShown = false;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
+        if (interactShown)
+        {
+            interact.gameObject.SetActive(true);
+        }
+        else
+        {
+            interact.gameObject.SetActive(false);
+        }
+
+        if ((dialogueIndex == 0 && Vector3.Distance(transform.position, girl.position) <= distanceToGirl) 
+            || (!BookFacePost.activeSelf && Vector3.Distance(transform.position, computer.position) <= distanceToComputer))
+        {
+            interactShown = true;
+        }
+        else
+        {
+            interactShown = false;
+        }
+
         // Interaction with NPC and Object
         if (Input.GetKeyDown(KeyCode.E))
         {
+            interactShown = false;
             if (Vector3.Distance(transform.position, girl.position) <= distanceToGirl && dialogueIndex < 12)
             {
                 DialogueFunction();
@@ -120,6 +142,7 @@ public class PlayerInteraction : MonoBehaviour {
             talkedToGirl = true;
             SpeechBubble.enabled = false;
             Dialogue.text = "";
+            dialogueIndex = 0;
             StartCoroutine(newnoteblip(4));
         }
 

@@ -30,7 +30,7 @@ public class TriviaController : MonoBehaviour {
     public TextAsset questionInfo;
     List<string[]> questions = new List<string[]>();
 
-    int numQuestion;
+    public int numQuestion;
     int questionsAnswered;
 
     bool answerCorrect = false;
@@ -189,7 +189,7 @@ public class TriviaController : MonoBehaviour {
 
                     if (!test)
                     {
-                        drinkMixCon.activateDrinkMix();
+                        drinkMixCon.activateDrinkMix(numQuestion);
                     }
 
                     if (answerCorrect)

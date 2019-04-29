@@ -35,7 +35,8 @@ public class TriviaController : MonoBehaviour {
 
     bool answerCorrect = false;
 
-    bool triviaActivated = false;
+    [HideInInspector]
+    public bool triviaActivated = false;
 
     string triviaQuestion = "Hey, there's a new drink I'd like to try!";
     string triviaCorrect = "Great, so can I have a ";
@@ -187,7 +188,7 @@ public class TriviaController : MonoBehaviour {
                     triviaActivated = false;                   
                     dialogueIndex = 0;
 
-                    if (!test)
+                    if (!test && answerCorrect)
                     {
                         drinkMixCon.activateDrinkMix(numQuestion);
                     }
@@ -207,6 +208,7 @@ public class TriviaController : MonoBehaviour {
         else if (questionsAnswered >= questions.Count)
         {
             startTriviaButton.image.color = Color.red;
+            triviaActivated = false;
         }
     }
 

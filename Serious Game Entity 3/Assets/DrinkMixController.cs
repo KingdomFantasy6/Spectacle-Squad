@@ -17,15 +17,16 @@ public class DrinkMixController : MonoBehaviour {
 
     // please let me know if you have any questions with my code
 
-
+    public GameController _GameController;
     public TriviaController _TriviaController;
+    public GameObject FinishedDrink;
+    public GameObject ButtonBlocker;
 
     bool drinkMixActivated = false;
 
-    string orderDrinkQuestion = "Hello, may I have a ";
-    string orderDrinkCorrect = "Perfect, thank you!";
-    string orderDrinkWrongOrder = "It's got the right ingredients, but... not in the right order.";
-    string orderDrinkIncorrect = "This isn't what I ordered";
+    string orderDrinkCorrect = "'Perfect, thank you!'";
+    string orderDrinkWrongOrder = "'It's got the right ingredients, but...\nit's not done in the right order.'";
+    string orderDrinkIncorrect = "'This isn't what I ordered'";
 
     int DrinkNum = 0; 
     /*
@@ -39,6 +40,9 @@ public class DrinkMixController : MonoBehaviour {
     public GameObject QuitMixingButton;
     public Text DrinkWanted;
     public Text Ingredients;
+    public GameObject SubmitDrink;
+    public GameObject RetryButton;
+    
 
     [Header("Selection Set A")]
     public GameObject SelectionSetA;
@@ -67,6 +71,12 @@ public class DrinkMixController : MonoBehaviour {
     public Sprite Lime;
     public Sprite Champagne;
     public Sprite Blank;
+
+    [Header("Finished Drink Images")]
+    public Sprite RumCoke;
+    public Sprite ScrewDriver;
+    public Sprite Mimosa;
+    public Sprite GinTonic;
 
     public int IngrSelectNum = 0;
     /*
@@ -147,7 +157,15 @@ public class DrinkMixController : MonoBehaviour {
                     }
             }
 
-
+            if (IngrSelectNum == 3 || IngrSelectNum == 7)
+            {
+                SubmitDrink.SetActive(true);
+                RetryButton.SetActive(true);
+            } else
+            {
+                SubmitDrink.SetActive(false);
+                RetryButton.SetActive(false);
+            }
 
 
 
@@ -296,11 +314,12 @@ public class DrinkMixController : MonoBehaviour {
 
     public void activateDrinkMix(int Drink)
     {
-        if (!drinkMixActivated)
+        if (!drinkMixActivated && !_TriviaController.triviaActivated)
         {
             DrinkNum = Drink;
             DMScreen.SetActive(true);
             QuitMixingButton.SetActive(true);
+            ButtonBlocker.SetActive(false);
 
             drinkMixActivated = true;
 
@@ -316,7 +335,7 @@ public class DrinkMixController : MonoBehaviour {
                 case 1:
                     {
                         SelectionSetA.SetActive(true);
-                        DrinkWanted.text = "One Rum and Coke Mix, please!";
+                        DrinkWanted.text = "'One Rum and Coke Mix, please!'";
                         Ingredients.text = "Rum \n" + "Coke";
                         IngrSelectNum = 1;
                         break;
@@ -324,23 +343,23 @@ public class DrinkMixController : MonoBehaviour {
                 case 2:
                     {
                         SelectionSetA.SetActive(true);
-                        DrinkWanted.text = "Screw Driver, please!";
-                        Ingredients.text = "Orange Juice \n" + "Vodka";
+                        DrinkWanted.text = "'A Screw Driver, please!'";
+                        Ingredients.text = "Vodka \n" + "Orange Juice";
                         IngrSelectNum = 1;
                         break;
                     }
                 case 3:
                     {
                         SelectionSetB.SetActive(true);
-                        DrinkWanted.text = "Mimosa, please!";
-                        Ingredients.text = "Champange \n" + "Triple Sec \n" + "Orange Juice";
+                        DrinkWanted.text = "'One Mimosa, please!'";
+                        Ingredients.text = "Orange Juice \n" + "Champange \n" + "Triple Sec";
                         IngrSelectNum = 4;
                         break;
                     }
                 case 4:
                     {
                         SelectionSetB.SetActive(true);
-                        DrinkWanted.text = "Gin and Tonic Mix, please!";
+                        DrinkWanted.text = "'Gin and Tonic, please!'";
                         Ingredients.text = "Gin \n" + "Tonic Water \n" + "Lime";
                         IngrSelectNum = 4;
                         break;
@@ -358,6 +377,7 @@ public class DrinkMixController : MonoBehaviour {
             SelectionSetA.SetActive(false);
             SelectionSetB.SetActive(false);
             QuitMixingButton.SetActive(false);
+            FinishedDrink.GetComponent<Image>().sprite = Blank;
             drinkMixActivated = false;
         }
     }
@@ -367,11 +387,122 @@ public class DrinkMixController : MonoBehaviour {
         return drinkMixActivated;
     }
 
+    /*
+        DrinkNum                                     IngredientNum
+    1 = Rum & Coke   (Rum & Coke)                      1 - Coke
+    2 = Screw Driver (Vodka -> OJ)                      2 - Vodka
+    3 = Mimosa       (OJ -> Chmpg -> Trip.-Sec)         3 - Rum
+    4 = Gin & Tonic  (Gin -> Tonic -> Lime)             4 - OJ
+                                                        5 - Tonic
+                                                        6 - Gin
+                                                        7 - Triple Sec
+                                                        8 - Lime
+                                                        9 - Champange
+    */
 
     public void GiveDrink()
     {
+        switch (DrinkNum)
+        {
+            //Rum & Coke    (Rum[3] & Coke[1])
+            case 1:
+                {
+                    if ((SelectionBoxA1.GetComponent<Ingredient>().IngredientNum == 3 && SelectionBoxA2.GetComponent<Ingredient>().IngredientNum == 1)
+                        || (SelectionBoxA1.GetComponent<Ingredient>().IngredientNum == 1 && SelectionBoxA2.GetComponent<Ingredient>().IngredientNum == 3))
+                    {
+                        DrinkWanted.text = orderDrinkCorrect;
+                        _GameController.points++;
+                        FinishedDrink.GetComponent<Image>().sprite = RumCoke;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    } else
+                    {
+                        DrinkWanted.text = orderDrinkIncorrect;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
 
-
+                }
+            //Screw Driver  (Vodka[2] -> OJ[4])
+            case 2:
+                {
+                    if ((SelectionBoxA1.GetComponent<Ingredient>().IngredientNum == 2 && SelectionBoxA2.GetComponent<Ingredient>().IngredientNum == 4))
+                    {
+                        DrinkWanted.text = orderDrinkCorrect;
+                        _GameController.points++;
+                        FinishedDrink.GetComponent<Image>().sprite = ScrewDriver;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    } else
+                    if ((SelectionBoxA1.GetComponent<Ingredient>().IngredientNum == 4 && SelectionBoxA2.GetComponent<Ingredient>().IngredientNum == 2))
+                    {
+                        DrinkWanted.text = orderDrinkWrongOrder;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }else
+                    {
+                        DrinkWanted.text = orderDrinkIncorrect;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                }
+            //Mimosa        (OJ[4] -> Chmpg[9] -> Trip.-Sec[7])
+            case 3:
+                {
+                    if ((SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 4 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 9 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 7))
+                    {
+                        DrinkWanted.text = orderDrinkCorrect;
+                        _GameController.points++;
+                        FinishedDrink.GetComponent<Image>().sprite = Mimosa;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                    else if((SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 4 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 7 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 9)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 9 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 4 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 7)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 9 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 7 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 4)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 7 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 4 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 9)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 7 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 9 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 4))
+                    {
+                        DrinkWanted.text = orderDrinkWrongOrder;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                    else
+                    {
+                        DrinkWanted.text = orderDrinkIncorrect;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                }
+            //Gin & Tonic   (Gin[6] -> Tonic[5] -> Lime[8])
+            case 4:
+                {
+                    if ((SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 6 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 5 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 8))
+                    {
+                        DrinkWanted.text = orderDrinkCorrect;
+                        _GameController.points++;
+                        FinishedDrink.GetComponent<Image>().sprite = GinTonic;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                    else if ((SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 6 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 8 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 5)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 5 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 6 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 8)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 5 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 8 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 6)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 8 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 6 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 5)
+                        || (SelectionBoxB1.GetComponent<Ingredient>().IngredientNum == 8 && SelectionBoxB2.GetComponent<Ingredient>().IngredientNum == 5 && SelectionBoxB3.GetComponent<Ingredient>().IngredientNum == 6))
+                    {
+                        DrinkWanted.text = orderDrinkWrongOrder;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                    else
+                    {
+                        DrinkWanted.text = orderDrinkIncorrect;
+                        StartCoroutine(WaitForRestart(3));
+                        break;
+                    }
+                }
+        }
 
     }
 
@@ -388,5 +519,11 @@ public class DrinkMixController : MonoBehaviour {
     }
 
 
-
+    IEnumerator WaitForRestart(int WaitTime)
+    {
+        ButtonBlocker.SetActive(true);
+        yield return new WaitForSeconds(WaitTime);
+        RemoveIngredient();
+        deactivateDrinkMix();
+    }
 }

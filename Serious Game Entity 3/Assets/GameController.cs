@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
     // Point indicator
     public GameObject pointsIndicator;
     Text pointsText;
-    int points = 0;
+    public int points = 0;
 
     void Start () {
         InitializeGame();
